@@ -1,0 +1,1 @@
+munch-cuda.exe -predationProbability=0.0002 -experimentName=test numberOfIterations=1024000 gridSize=1024 -nmax=1000000

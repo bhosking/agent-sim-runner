@@ -1,0 +1,103 @@
+Command line arguments
+-experimentName=<string> DEFAULT = experiment : this identifies the experiment and saves and output will be stored in a directory of this name.
+-load=<string> DEFAULT = not present : loads the state from the provided file prefix. (this is the string that appears identical in front of all the save files) 
+-inputFile=<string> DEFAULT = not present : the file from which to read input parameters. One flag per line, with the same format as the command line arguments.
+-numAgents=<int> DEFAULT = 131072 : number of agents (preferably a power of 2)
+-nMax=<int> DEFAULT = 2*n : max number of agents, only meaningful in a reproduction experiment
+-gridSize=<int> DEFAULT = 256 : size of the environment in cells per dimension, must be a power of two
+-cellSize=<float> DEFAULT = 0.25 : size of each cell
+
+-loadPopulations=<string:float,string:float ...> DEFAULT = not present : this loads populations from existing saves, the string is the save location usually of the format
+	<experimentName>/saves/<iteration>, and the float the proportion of the native population to replace, eg 0.5 will replace 50% 1.0 will replace them all. If there are too
+	few agents in the loaded population to fulfill the requirement then agents will be duplicated. The positions are not loaded. multiple populations can be loaded by separating 
+	the requests with a comma however the sum of the proportions must not exceed 1.
+	
+-loadEnvironment=<string> DEFAULT = not present : this loads the environment from an existing save. The string is the save location usually of the format <experimentName>/saves/<iteration>
+	this will resize the grid size if necessary.
+
+-seed=<int> DEFAULT = 0xFFFFFFFF : seed for simulations random generator, if seed is the default a seed is generated using system time.
+-nextAutoSave=<int> DEFAULT = 64000 : the next iteration in which to save the state, after saving it saves again that many timesteps later, ie if autosave is set to 10, it will save on iteration 10, 20, 40, 80 etc. if it is 0, there are no autosaves
+-resetStatisticsOnAutoSave : if this flag is set then statistics are reset after each autosave.
+-outputStatisticsOnAutoSave : if this flag is set then statistics are output on autosave (before reset if that flag is set)
+-initialDistribution=<string> DEFAULT = uniform : shape of initial distribution available values are {uniform,circle}.
+-circleX=<float> DEFAULT = -1 : the x location of the center of the circle, negative values will set x to be at cellSize*grid/2 (the center of the grid)
+-circleY=<float> DEFAULT = -1 : the y location of the center of the circle, negative values will set y to be at cellSize*grid/2 (the center of the grid)
+-circleR=<float> DEFAULT = -1 : the radius of the circle, negative values will create a circle of radius cellSize*grid/4
+agents are placed at their target location modulo the environment dimensions
+
+-numberOfIterations=<int> DEFAULT = 0 : number of iterations before simulation exits, a value of 0 means there is no limit, exits at the end of the iteration
+-speed=<float> DEFAULT = 0.0025 : movement per tick
+-inertia=<float> DEFAULT = 0.6 : resistance to changes in velocity [0,1]
+-noiseIntensity=<float> DEFAULT = 0.05 : the relative strength of noise on movement
+
+-social DEFAULT not present : the presence of this flag means that the simulation will run with social behaviours
+-attractionRadius=<float> DEFAULT = 0.25  
+-alignmentRadius=<float> DEFAULT = 0.125  
+-repulsionRadius=<float> DEFAULT = 0.03125
+-attraction=<float> DEFAULT = 0.01 : the strength of the force of attraction 
+-alignment=<float> DEFAULT = 0.5 : the strength of the force of alignment 
+-repulsion=<float> DEFAULT = 1.5 : the strength of the force of repulsion
+
+-numOcclusion=<int> DEFAULT = 100 : number of neighbours within alignment range at which point attraction is ignored
+
+-fastSpeed=<float> DEFAULT = 0.000 : speed which is added to base speed when moving quickly
+-jumpDistance=<float> DEFAULT = 0.1 : distance jumped
+-jumpProbability=<float> DEFAULT = 0.01 : base probability of jumping
+-jumpProbabilityDense=<float> DEFAULT = 0.1 : probability of jumping when other locusts are within repulsion range
+-activePeriod=<float> DEFAULT = 81000.0 : the length of time locust is active for
+-resumeProbability=<float> DEFAULT = 0.0011 : probability per unit time that the locust will resume movement
+-resumeProbabiltyDense=<float> DEFAULT = 0.11 : probability per unit time that the locust will resume movement when there are other locusts within repulsion range
+-resumeProbabiltyLone=<float> DEFAULT = 0.5 : probability per unit time that the locust will resume movement when no other locusts are visible
+
+-foodExperiment DEFAULT not a food experiment : presence of this flag tells the simulation that this is a nutritional experiment and agents will have a nutritional state, target and forage for food.
+-foodQuantity=<float> DEFAULT = 1000 : the quantity of food in a cell (each locust consumes 1 per iteration whilst eating)
+-foodRegenerationTime=<int> : DEFAULT = 10000 : iterations after being consumed till a food respawns
+-cullProportion=<float> DEFAULT = 0.9 : proportion of population to cull when n reaches nMax
+-biteSize=<float> DEFAULT = 0.01: amount of food eaten per iteration
+-metabolicCostC=<float> DEFAULT = 0.0001: decrease in carbohydrate per iteration.
+-metabolicCostP=<float> DEFAULT = 0.0001: decrease in protein per iteration.
+
+-ageOfMaturity=<float> DEFAULT = 4000: the number of iterations before an agent reaches maturity. 
+
+-initialIntakeTarget=<float,float> DEFAULT = -1,-1 : the initial intake target of the agents. If the value is -1,-1 then the agents are instead scattered uniformly over the 2 unit square
+-intakeTargetStddv=<float> DEFAULT = 0.01 : the standard deviation of the offspring distribution of intake target. A value of 0 leads to no evolution of intake target.
+
+foods=<float,float,float,float;float,float,float,float...> DEFAULT = not present: the list of foods in the format "foods=f1p,f1c,f1f,f1a;f2p,f2c,f2f,f2a;f3p,f3c,f3f,f3a;etc" ie each food property is separated by a comma and each food is separated by a semicolon
+	p=<float> DEFAULT = 0 : the Protein content of this food [0,1] 
+	c=<float> DEFAULT = 0 : the carbohydrate content of this food [0,1] 
+	f=<float> DEFAULT = 1.0 : the fractal dimension of this food [0,2], this is like a measure of the scattering of the food. 
+	a=<float> DEFAULT = 0.5 : the total abundance of this food [0,1]
+For example foods=0,1,1,0.5;1,0,1,0.5 makes two foods each present in 50% of the cells in the environment, one with 0% protien 100% carbohydrate and the other with 100% protein 0% carbohydrate. Each food has a medium level scattering.
+
+-loadMap=<string> filename of 32bit png that represents nutritional map, red channel represents protein concentration, green channel represents carbohydrate concentration, blue and alpha aren't currently used. The dimensions of the environment will match the dimensions of the png. 
+
+-foodTransparency=<float> DEFAULT = 0 : the transparency of the food [0,1]
+-agentTransparency=<float> DEFAULT = 0 : the transparency of the agent [0,1]
+
+-recordAgentNutrition=<int> DEFAULT = 1000 : ticks between writing a summary of the state of the simulation to summary.tsv in the experiment folder. 0 = disables this 
+It outputs current iteration, average nutritional state for x and y, average intake target for x and y, average age of agents, population and the average available P and C nutrients per cell.
+
+-longevityLandscape=<float,float,float,float,float> DEFAULT <10000,0,1,1,1> : the parameters of a 2D Gaussian curve representing the average mature lifetime of agents for any position in nutrient space.
+ It is of the form <max, x mean, y mean, x standard deviation, y standard deviation>
+-FecundityLandscape=<float,float,float,float,float> DEFAULT <0.01,1,0,1,1> : the parameters of a 2D Gaussian curve representing the probability of an agent reproducing each iteration at any given position in nutrient space.
+ It has the same form as that of the longevityLandscape.
+-survivalAgeDependancy=<float> DEFAULT = 0 : the strength of the age dependence on survival probability.
+-predationProbabilty=<float> DEFAULT = 0 : the additional probability of death each iteration of mature agents regardless of nutritional state
+
+Controls
+'+' increase iterations per frame
+'-' decrease iterations per frame
+'p' pauses
+'b' toggle the nutritional landscape
+shift+b increases nutritional landscape opacity
+alt+b decrease nutritional landscape opacity
+mouse wheel zooms in and out
+click and drag pans viewport
+shift+c increases agent opacity
+alt+c decreases agent opacity
+'r' resets the simulation
+'e' randomizes nutritional landscape
+'s' saves nutritional landscape to "nutrientMap.png"
+'l' loads nutritional landscape from "nutritionalMap.png"
+'g' toggles the grid
+'n' switches between spatial view and nutritional state view.
