@@ -12,7 +12,10 @@ class Counter(object):
         self.value = value
         self.lock = threading.Lock()
 
-    def next(self):
+    def __iter__(self):
+        return self
+
+    def __next__(self):
         with self.lock:
             n = self.value
             self.value += 1
@@ -30,8 +33,7 @@ def run_test(iteration, test_type, extra_args):
 
 
 def run_tests(iterator):
-    while True:
-        n = iterator.next()
+    for n in iterator:
         run_test(n, 'e2p0fl0r', [])
         run_test(n, 'e2p0fl1r', ['-longevityLandscape=10000,0,1,0.5,0.5',
                                  '-fecundityLandscape=0.01,1,0,0.5,0.5'])
