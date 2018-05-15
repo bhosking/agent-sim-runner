@@ -22,8 +22,7 @@ class Counter(object):
         return n
 
 
-def run_test(iteration, test_type, extra_args):
-    test_name = test_type + TEST_SUFFIX + str(iteration)
+def run_test(test_name, extra_args):
     if os.path.isfile(test_name + '\\Iteration8192000save.cmd'):
         return
     shutil.rmtree(test_name, ignore_errors=True)
@@ -34,13 +33,14 @@ def run_test(iteration, test_type, extra_args):
 
 def run_tests(iterator):
     for n in iterator:
-        run_test(n, 'e2p0fl0r', [])
-        run_test(n, 'e2p0fl1r', ['-longevityLandscape=10000,0,1,0.5,0.5',
-                                 '-fecundityLandscape=0.01,1,0,0.5,0.5'])
-        run_test(n, 'e2p1fl0r', ['-predationProbability=0.0002 '])
-        run_test(n, 'e2p1fl1r', ['-predationProbability=0.0002',
-                                 '-longevityLandscape=10000,0,1,0.5,0.5',
-                                 '-fecundityLandscape=0.01,1,0,0.5,0.5'])
+        suffix = TEST_SUFFIX + str(n)
+        run_test('e2p0fl0r' + suffix, [])
+        run_test('e2p0fl1r' + suffix, ['-longevityLandscape=10000,0,1,0.5,0.5',
+                                       '-fecundityLandscape=0.01,1,0,0.5,0.5'])
+        run_test('e2p1fl0r' + suffix, ['-predationProbability=0.0002 '])
+        run_test('e2p1fl1r' + suffix, ['-predationProbability=0.0002',
+                                       '-longevityLandscape=10000,0,1,0.5,0.5',
+                                       '-fecundityLandscape=0.01,1,0,0.5,0.5'])
 
 
 counter = Counter()
