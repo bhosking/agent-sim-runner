@@ -47,19 +47,15 @@ class Counter(object):
         return name, args
 
 
-def run_test(device, test_name, extra_args):
-    if os.path.isfile(test_name + '\\Iteration8192000save.cmd'):
-        return
-    shutil.rmtree(test_name, ignore_errors=True)
-    args = (['munch-cuda.exe', '-nogui', '-experimentName=' + test_name,
-             '-device=' + device]
-            + extra_args)
-    subprocess.run(args, shell=True, check=True)
-
-
 def run_tests(iterator, device):
-    for test_name, args in iterator:
-        run_test(device, test_name, args)
+    device_arg = '-device=' + device
+    for test_name, extra_args in iterator:
+        if os.path.isfile(test_name + '\\Iteration8192000save.cmd'):
+            continue
+        shutil.rmtree(test_name, ignore_errors=True)
+        args = (['munch-cuda.exe', '-nogui', '-experimentName=' + test_name,
+                 device_arg] + extra_args)
+        subprocess.run(args, shell=True, check=True)
 
 
 counter = Counter(TESTS, TEST_SUFFIX)
