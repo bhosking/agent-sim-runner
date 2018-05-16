@@ -3,7 +3,10 @@ import shutil
 import subprocess
 import threading
 
-THREADS = 2
+THREADS = {
+    0: 2,
+    1: 0,
+}
 TEST_SUFFIX = 'Brendan'
 
 TESTS = [
@@ -44,22 +47,27 @@ class Counter(object):
         return name, args
 
 
-def run_test(test_name, extra_args):
+def run_test(device, test_name, extra_args):
     if os.path.isfile(test_name + '\\Iteration8192000save.cmd'):
         return
     shutil.rmtree(test_name, ignore_errors=True)
-    args = (['munch-cuda.exe', '-nogui', '-experimentName=' + test_name]
+    args = (['munch-cuda.exe', '-nogui', '-experimentName=' + test_name,
+             '-device=' + device]
             + extra_args)
     subprocess.run(args, shell=True, check=True)
 
 
-def run_tests(iterator):
+def run_tests(iterator, device):
     for test_name, args in iterator:
-        run_test(test_name, args)
+        run_test(device, test_name, args)
 
 
 counter = Counter(TESTS, TEST_SUFFIX)
-for i in range(THREADS - 1):
-    thread = threading.Thread(target=run_tests, kwargs={'iterator': counter})
-    thread.start()
-run_tests(iterator=counter)
+for device_number, threads in THREADS.items():
+    device_string = str(device_number)
+    for i in range(threads):
+        thread = threading.Thread(
+            target=run_tests,
+            kwargs={'iterator': counter, 'device': device_string}
+        )
+        thread.start()
