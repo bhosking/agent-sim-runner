@@ -53,8 +53,8 @@ def run_tests(iterator, device):
         if os.path.isfile(test_name + '\\Iteration8192000save.cmd'):
             continue
         shutil.rmtree(test_name, ignore_errors=True)
-        args = (['munch-cuda.exe', '-nogui', '-experimentName=' + test_name,
-                 device_arg] + extra_args)
+        args = (['munch-cuda.exe', '-nogui', '-passiveWaitCPU',
+                 '-experimentName=' + test_name, device_arg] + extra_args)
         subprocess.run(args, shell=True, check=True)
 
 
