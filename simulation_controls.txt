@@ -7,10 +7,10 @@ Command line arguments
 -gridSize=<int> DEFAULT = 256 : size of the environment in cells per dimension, must be a power of two
 -cellSize=<float> DEFAULT = 0.25 : size of each cell
 
--loadPopulations=<string:float,string:float ...> DEFAULT = not present : this loads populations from existing saves, the string is the save location usually of the format
-	<experimentName>/saves/<iteration>, and the float the proportion of the native population to replace, eg 0.5 will replace 50% 1.0 will replace them all. If there are too
+-loadPopulations=<string,float;string,float ...> DEFAULT = not present : this loads populations from existing saves, the string is the save location usually of the format
+	<experimentName>/saveData/<iteration>, and the float the proportion of the native population to replace, eg 0.5 will replace 50% 1.0 will replace them all. If there are too
 	few agents in the loaded population to fulfill the requirement then agents will be duplicated. The positions are not loaded. multiple populations can be loaded by separating 
-	the requests with a comma however the sum of the proportions must not exceed 1.
+	the requests with a semicolon however the sum of the proportions must not exceed 1. e.g. "-loadPopulations=testExperiment1/saveData/1024000,0.5;testExperiment2/saveData/1024000,0.5"
 	
 -loadEnvironment=<string> DEFAULT = not present : this loads the environment from an existing save. The string is the save location usually of the format <experimentName>/saves/<iteration>
 	this will resize the grid size if necessary.
