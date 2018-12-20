@@ -1,23 +1,35 @@
 import os.path
+import glob
+import random
 import shutil
 import subprocess
 import threading
 
 THREADS = {
-    0: 2,
-    1: 0,
+    0: 3,
+    1: 3,
 }
-TEST_SUFFIX = 'Brendan'
+TEST_SUFFIX = ''
+COMPETITION_EXP = True
+FL0COMP = [('e2p0fl0r*', '0.5'), ('e2p1fl0r*', '0.5')]
+FL1COMP = [('e2p0fl1r*', '0.5'), ('e2p1fl1r*', '0.5')]
 
 TESTS = [
-    ('e2p0fl0r', []),
-    ('e2p0fl1r', ['-longevityLandscape=10000,0,1,0.5,0.5',
-                  '-fecundityLandscape=0.01,1,0,0.5,0.5']),
-    ('e2p1fl0r', ['-predationProbability=0.0002 ']),
-    ('e2p1fl1r', ['-predationProbability=0.0002',
+    ('comp_e2p0fl0r', [], FL0COMP),
+    ('comp_e2p0fl1r', ['-longevityLandscape=10000,0,1,0.5,0.5',
+                  '-fecundityLandscape=0.01,1,0,0.5,0.5'], FL0COMP),
+    ('comp_e2p1fl0r', ['-predationProbability=0.0002 '], FL1COMP),
+    ('comp_e2p1fl1r', ['-predationProbability=0.0002',
                   '-longevityLandscape=10000,0,1,0.5,0.5',
-                  '-fecundityLandscape=0.01,1,0,0.5,0.5'])
+                  '-fecundityLandscape=0.01,1,0,0.5,0.5'], FL1COMP)
 ]
+
+
+def make_competition_command(population_requirements):
+    arg = '-loadPopulations='
+    for p in population_requirements:
+        arg += random.choice(glob.glob(p[0])) + '/saveData/8192000'+','+p[1]+';'
+    return arg.rstrip(';')
 
 
 class Counter(object):
@@ -42,8 +54,10 @@ class Counter(object):
                 self.test_index += 1
             test = self.tests[test_index]
             suffix = self.test_suffix
-        name = test[0] + suffix + str(repeat)
-        args = test[1]
+            name = test[0] + suffix + str(repeat)
+            args = test[1].copy()
+            if COMPETITION_EXP:
+                args.append(make_competition_command(test[2]))
         return name, args
 
 

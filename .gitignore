@@ -1,6 +1,7 @@
 # Test result folders
 test/
-e2p*
+*e2p*
+*e0p*
 
 # pycharm environment
 .idea/
