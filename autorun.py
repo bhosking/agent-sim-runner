@@ -16,9 +16,9 @@ FL1COMP = [('e2p0fl1r*', '0.5'), ('e2p1fl1r*', '0.5')]
 
 TESTS = [
     ('comp_e2p0fl0r', [], FL0COMP),
+    ('comp_e2p1fl0r', ['-predationProbability=0.0002 '], FL0COMP),
     ('comp_e2p0fl1r', ['-longevityLandscape=10000,0,1,0.5,0.5',
-                  '-fecundityLandscape=0.01,1,0,0.5,0.5'], FL0COMP),
-    ('comp_e2p1fl0r', ['-predationProbability=0.0002 '], FL1COMP),
+                  '-fecundityLandscape=0.01,1,0,0.5,0.5'], FL1COMP),    
     ('comp_e2p1fl1r', ['-predationProbability=0.0002',
                   '-longevityLandscape=10000,0,1,0.5,0.5',
                   '-fecundityLandscape=0.01,1,0,0.5,0.5'], FL1COMP)
